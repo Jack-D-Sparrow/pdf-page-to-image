@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from pdf2image import convert_from_bytes
 import requests
 import base64
+import io
 
 app = Flask(__name__)
 
