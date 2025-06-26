@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: pdf-to-image-api
+    env: docker
+    plan: free
+    autoDeploy: false
+    buildCommand: ""
+    startCommand: ""
+    dockerContext: .
+    dockerfilePath: Dockerfile
