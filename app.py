@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from pdf2image import convert_from_bytes
+from pdf2image import convert_from_bytes, pdfinfo_from_bytes
 import requests
 import base64
 import io
@@ -55,8 +55,9 @@ def get_pdf_info():
         if response.status_code != 200:
             return jsonify({"error": "Failed to download PDF"}), 400
 
-        images = convert_from_bytes(response.content, dpi=150)
-        total_pages = len(images)
+        # Get metadata without rendering images
+        info = pdfinfo_from_bytes(response.content)
+        total_pages = int(info["Pages"])
 
         return jsonify({
             "total_pages": total_pages
