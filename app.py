@@ -42,5 +42,28 @@ def convert_single_page():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route("/info", methods=["POST"])
+def get_pdf_info():
+    try:
+        data = request.get_json()
+        pdf_url = data.get("pdf_url")
+
+        if not pdf_url:
+            return jsonify({"error": "Missing 'pdf_url'"}), 400
+
+        response = requests.get(pdf_url)
+        if response.status_code != 200:
+            return jsonify({"error": "Failed to download PDF"}), 400
+
+        images = convert_from_bytes(response.content, dpi=150)
+        total_pages = len(images)
+
+        return jsonify({
+            "total_pages": total_pages
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
